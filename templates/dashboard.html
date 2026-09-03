@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+{% block title %}Dashboard | Expense Tracker{% endblock %}
+{% block header %}Overview{% endblock %}
+
+{% block content %}
+<style>
+    /* Dashboard Modern Layout & Styling Overrides */
+    .dashboard-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    /* Top Stats Grid Forced to 1 Row on Desktop */
+    .stats-row-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.25rem;
+        width: 100%;
+    }
+
+    .stat-card-enhanced {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.25rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card-enhanced:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+    }
+
+    .stat-header-flex {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+
+    .stat-title {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #64748b;
+        margin: 0;
+    }
+
+    .stat-icon-badge {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+
+    .bg-balance { background: #eff6ff; color: #2563eb; }
+    .bg-income { background: #f0fdf4; color: #16a34a; }
+    .bg-expenses { background: #fef2f2; color: #dc2626; }
+    .bg-savings { background: #faf5ff; color: #9333ea; }
+
+    .stat-value {
+        font-size: 1.6rem;
+        font-weight: 800;
+        color: #0f172a;
+        line-height: 1.2;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-subtext {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+
+    /* Quick Action Header */
+    .dashboard-action-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1rem 1.5rem;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.25rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .welcome-text p {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 2px 0 0 0;
+    }
+
+    .action-btn-group {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .action-btn {
+        text-decoration: none;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 0.6rem 1rem;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .btn-primary-action {
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+    .btn-primary-action:hover {
+        background: #1d4ed8;
+    }
+
+    .btn-secondary-action {
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+    .btn-secondary-action:hover {
+        background: #e2e8f0;
+    }
+
+    /* Recent Transactions Styling */
+    .transaction-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 1.5rem;
+    }
+
+    .table-modern {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+
+    .table-modern th {
+        text-align: left;
+        padding: 0.75rem 1rem;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        border-bottom: 2px solid #f1f5f9;
+    }
+
+    .table-modern td {
+        padding: 1rem;
+        border-bottom: 1px solid #f8fafc;
+        font-size: 0.9rem;
+        color: #334155;
+    }
+
+    .category-badge {
+        display: inline-block;
+        padding: 0.25rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    /* Responsive fallbacks */
+    @media (max-width: 1024px) {
+        .stats-row-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 640px) {
+        .stats-row-grid {
+            grid-template-columns: 1fr;
+        }
+        .dashboard-action-bar {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+
+    <!-- Quick Action Header -->
+    <div class="dashboard-action-bar">
+        <div class="welcome-text">
+            <h2>Welcome back, {{ user_name }}! 👋</h2>
+            <p>Here is your financial overview for this period.</p>
+        </div>
+        <div class="action-btn-group">
+            <a href="{{ url_for('expenses.list_expenses') }}" class="action-btn btn-primary-action">
+                + Add Expense
+            </a>
+            <a href="{{ url_for('income.list_income') }}" class="action-btn btn-secondary-action">
+                + Add Income
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 Stats Cards Displayed in 1 Row -->
+    <div class="stats-row-grid">
+        <!-- Total Balance -->
+        <div class="stat-card-enhanced">
+            <div class="stat-header-flex">
+                <span class="stat-title">Total Balance</span>
+                <div class="stat-icon-badge bg-balance">💼</div>
+            </div>
+            <div class="stat-value">₹{{ "%.2f"|format(balance) }}</div>
+            <span class="stat-subtext">Net Available Capital</span>
+        </div>
+
+        <!-- Total Income -->
+        <div class="stat-card-enhanced">
+            <div class="stat-header-flex">
+                <span class="stat-title">Total Income</span>
+                <div class="stat-icon-badge bg-income">📈</div>
+            </div>
+            <div class="stat-value" style="color: #16a34a;">₹{{ "%.2f"|format(total_income) }}</div>
+            <span class="stat-subtext">Total Cash Inflow</span>
+        </div>
+
+        <!-- Total Expenses -->
+        <div class="stat-card-enhanced">
+            <div class="stat-header-flex">
+                <span class="stat-title">Total Expenses</span>
+                <div class="stat-icon-badge bg-expenses">📉</div>
+            </div>
+            <div class="stat-value" style="color: #dc2626;">₹{{ "%.2f"|format(total_expenses) }}</div>
+            <span class="stat-subtext">Total Outflow Spent</span>
+        </div>
+
+        <!-- Savings Rate -->
+        <div class="stat-card-enhanced">
+            <div class="stat-header-flex">
+                <span class="stat-title">Savings Rate</span>
+                <div class="stat-icon-badge bg-savings">🎯</div>
+            </div>
+            <div class="stat-value">{{ savings_rate }}%</div>
+            <span class="stat-subtext">Income Saved</span>
+        </div>
+    </div>
+
+    <!-- Charts Breakdown Grid -->
+    <div class="grid grid-2" style="margin-bottom: 0;">
+        <div class="card" style="height: 330px; border-radius: 14px;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">Income vs Expenses</h3>
+            <canvas id="overviewChart"></canvas>
+        </div>
+        <div class="card" style="height: 330px; border-radius: 14px;">
+            <h3 style="font-size: 1rem; font-weight: 700; color: #0f172a; margin-bottom: 1rem;">Expenses by Category</h3>
+            <canvas id="categoryChart"></canvas>
+        </div>
+    </div>
+
+    <!-- Recent Transactions Table -->
+    <div class="transaction-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+            <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0;">Recent Transactions</h3>
+            <a href="{{ url_for('expenses.list_expenses') }}" style="font-size: 0.85rem; font-weight: 700; color: #2563eb; text-decoration: none;">View All →</a>
+        </div>
+        
+        <table class="table-modern">
+            <thead>
+                <tr>
+                    <th>Transaction Name</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th style="text-align: right;">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in recent_transactions %}
+                <tr>
+                    <td style="font-weight: 600;">{{ item.expense_name }}</td>
+                    <td><span class="category-badge">{{ item.expense_category }}</span></td>
+                    <td style="color: #64748b;">{{ item.expense_date }}</td>
+                    <td style="text-align: right; color: #dc2626; font-weight: 700;">-₹{{ "%.2f"|format(item.expense_amount) }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 2rem; color: #94a3b8;">
+                        No recent transactions recorded.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        renderDashboardCharts(
+            JSON.parse('{{ categories|tojson|safe }}'),
+            JSON.parse('{{ category_totals|tojson|safe }}'),
+            JSON.parse('{{ month_labels|tojson|safe }}'),
+            JSON.parse('{{ monthly_expenses|tojson|safe }}'),
+            JSON.parse('{{ monthly_income|tojson|safe }}')
+        );
+    });
+</script>
+{% endblock %}

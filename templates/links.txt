@@ -1,0 +1,339 @@
+https://leetcode.com/studyplan/30-days-of-javascript/  ----5days
+done 
+
+https://leetcode.com/studyplan/30-days-of-pandas/ ----5days pandas codes
+Done
+
+https://leetcode.com/studyplan/top-sql-50/  -------5days 
+
+
+
+https://leetcode.com/studyplan/programming-skills/ ------5days
+
+
+
+https://leetcode.com/studyplan/dynamic-programming/ -----5days
+
+https://leetcode.com/studyplan/graph-theory/ --------5days
+
+
+https://leetcode.com/studyplan/binary-search/ ------5days
+
+https://leetcode.com/studyplan/leetcode-75/ -------2days
+
+
+
+https://leetcode.com/studyplan/top-interview-150/========4days
+
+
+
+https://leetcode.com/explore/learn/card/the-leetcode-beginners-guide/ =======udyach
+done
+
+
+
+https://leetcode.com/explore/learn/card/dynamic-programming/ ===== within 10 days
+
+
+
+https://leetcode.com/explore/learn/card/fun-with-arrays/ =====within 5 days
+
+
+
+
+https://leetcode.com/explore/learn/card/sql-language/ ==== within 5days
+
+
+https://leetcode.com/explore/learn/card/graph/ =====within 5days
+
+
+
+
+https://leetcode.com/explore/learn/card/sorting/ ======within 2days
+
+
+
+Single Page Application
+Progressive Web Application
+
+Rajan Chaudhari
+11:41 PM
+Commerce Web Application / Portal Web Application
+
+lalit Sonawane
+11:45 PM
+done sir
+
+Rajan Chaudhari
+11:46 PM
+https://www.zoho.com/in/expense/expense-tracking-software/
+
+
+
+
+
+
+❂ Google Firebase: https://firebase.google.com/
+◉ Google Firebase Authentication: https://firebase.google.com/docs/auth
+◉ Google Firebase Authentication (Google): https://firebase.google.com/docs/auth/web/google-signin
+◉ Google Firebase Authentication (Facebook): https://firebase.google.com/docs/auth/web/facebook-login
+◉ Google Firebase Authentication (Twitter): https://firebase.google.com/docs/auth/web/twitter-login
+◉ Google Firebase Authentication (GitHub): https://firebase.google.com/docs/auth/web/github-auth
+◉ Google Firebase Authentication (Apple): https://firebase.google.com/docs/auth/web/apple
+◉ Google Firebase Authentication (Microsoft): https://firebase.google.com/docs/auth/web/microsoft-oauth
+◉ Google Firebase Authentication (Password): https://firebase.google.com/docs/auth/web/password-auth
+◉ Google Firebase Authentication (Email Link): https://firebase.google.com/docs/auth/web/email-link-auth
+◉ Google Firebase Authentication (TOTP): https://firebase.google.com/docs/auth/web/totp-mfa
+
+
+
+
+https://web.dev/learn/
+
+Rajan Chaudhari
+12:06 AM
+https://aiskillsnavigator.microsoft.com/
+
+
+
+python essentials 1,2
+javascript essentials 1,2
+
+
+
+
+
+https://pll.harvard.edu/course/cs50s-introduction-databases-sql
+https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python
+https://pll.harvard.edu/course/data-science-building-machine-learning-models
+https://pll.harvard.edu/course/introduction-data-science-python/2026-05
+
+Rajan Chaudhari
+12:18 AM
+https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python
+https://pll.harvard.edu/course/machine-learning-and-ai-python
+https://pll.harvard.edu/course/data-science-r-basics
+https://pll.harvard.edu/course/cs50s-introduction-programming-python
+
+
+
+https://www.freecodecamp.org/learn/python-v9/
+
+
+https://www.freecodecamp.org/learn/javascript-v9/
+
+Rajan Chaudhari
+12:22 AM
+https://www.freecodecamp.org/learn/relational-databases-v9/
+
+
+VS Code, Cursor
+pgAdmin, PostgreSQL
+Laptop and Wi-Fi Service
+npm and pnpm
+Python and Node
+
+
+
+Management Information System: Admission Module
+
+
+
+ihi-oait-ayq
+
+Rajan Chaudhari
+11:40 PM
+Single Page Application
+Progressive Web Application
+
+Rajan Chaudhari
+11:41 PM
+Commerce Web Application / Portal Web Application
+
+lalit Sonawane
+11:45 PM
+done sir
+
+Rajan Chaudhari
+11:46 PM
+https://www.zoho.com/in/expense/expense-tracking-software/
+
+Rajan Chaudhari
+11:50 PM
+❂ Google Firebase: https://firebase.google.com/
+◉ Google Firebase Authentication: https://firebase.google.com/docs/auth
+◉ Google Firebase Authentication (Google): https://firebase.google.com/docs/auth/web/google-signin
+◉ Google Firebase Authentication (Facebook): https://firebase.google.com/docs/auth/web/facebook-login
+◉ Google Firebase Authentication (Twitter): https://firebase.google.com/docs/auth/web/twitter-login
+◉ Google Firebase Authentication (GitHub): https://firebase.google.com/docs/auth/web/github-auth
+◉ Google Firebase Authentication (Apple): https://firebase.google.com/docs/auth/web/apple
+◉ Google Firebase Authentication (Microsoft): https://firebase.google.com/docs/auth/web/microsoft-oauth
+◉ Google Firebase Authentication (Password): https://firebase.google.com/docs/auth/web/password-auth
+◉ Google Firebase Authentication (Email Link): https://firebase.google.com/docs/auth/web/email-link-auth
+◉ Google Firebase Authentication (TOTP): https://firebase.google.com/docs/auth/web/totp-mfa
+
+Rajan Chaudhari
+11:52 PM
+AWS Amplify
+
+Rajan Chaudhari
+12:04 AM
+https://web.dev/learn/
+
+Rajan Chaudhari
+12:06 AM
+https://aiskillsnavigator.microsoft.com/
+
+Rajan Chaudhari
+12:07 AM
+https://skillshop.withgoogle.com/
+
+Rajan Chaudhari
+12:10 AM
+https://www.netacad.com/catalogs/learn/programming
+
+Rajan Chaudhari
+12:13 AM
+https://grow.google/intl/en_in/learn-skills/?skills=start-a-career&type=free-course&type=free-certification&skills=remote-work&skills=going-digital&skills=career-growth&skills=business-growth
+
+Rajan Chaudhari
+12:16 AM
+https://pll.harvard.edu/course/cs50s-introduction-databases-sql
+https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python
+https://pll.harvard.edu/course/data-science-building-machine-learning-models
+https://pll.harvard.edu/course/introduction-data-science-python/2026-05
+
+Rajan Chaudhari
+12:18 AM
+https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python
+https://pll.harvard.edu/course/machine-learning-and-ai-python
+https://pll.harvard.edu/course/data-science-r-basics
+https://pll.harvard.edu/course/cs50s-introduction-programming-python
+
+Rajan Chaudhari
+12:20 AM
+https://www.freecodecamp.org/learn/python-v9/
+https://www.freecodecamp.org/learn/javascript-v9/
+
+Rajan Chaudhari
+12:22 AM
+https://www.freecodecamp.org/learn/relational-databases-v9/
+
+Rajan Chaudhari
+12:23 AM
+2:30 PM?
+Management Information System: Admission Module
+
+Rajan Chaudhari
+12:25 AM
+VS Code, Cursor
+pgAdmin, PostgreSQL
+Laptop and Wi-Fi Service
+npm and pnpm
+Python and Node
+
+Rajan Chaudhari
+12:26 AM
+nvm
+
+Chat
+
+New Conversation
+
+🤓 Explain a complex thing
+
+Explain Artificial Intelligence so that I can explain it to my six-year-old child.
+
+
+🧠 Get suggestions and create new ideas
+
+Please give me the best 10 travel ideas around the world
+
+
+💭 Translate, summarize, fix grammar and more…
+
+Translate "I love you" French
+
+
+GPT-4o Mini
+Hello, how can I help you today?
+GPT-4o Mini
+coin image
+10
+Upgrade
+
+
+
+
+Single Page Application
+Progressive Web Application
+
+Rajan Chaudhari
+11:41 PM
+Commerce Web Application / Portal Web Application
+
+lalit Sonawane
+11:45 PM
+done sir
+
+Rajan Chaudhari
+11:46 PM
+https://www.zoho.com/in/expense/expense-tracking-software/
+
+
+
+
+
+-----------------------------
+
+https://www.zoho.com/in/expense/expense-tracking-software/
+clone till 5th sep
+
+
+---------------------------------------------------
+
+❂ Google Firebase: https://firebase.google.com/
+◉ Google Firebase Authentication: https://firebase.google.com/docs/auth
+◉ Google Firebase Authentication (Google): https://firebase.google.com/docs/auth/web/google-signin
+◉ Google Firebase Authentication (Facebook): https://firebase.google.com/docs/auth/web/facebook-login
+◉ Google Firebase Authentication (Twitter): https://firebase.google.com/docs/auth/web/twitter-login
+◉ Google Firebase Authentication (GitHub): https://firebase.google.com/docs/auth/web/github-auth
+◉ Google Firebase Authentication (Apple): https://firebase.google.com/docs/auth/web/apple
+◉ Google Firebase Authentication (Microsoft): https://firebase.google.com/docs/auth/web/microsoft-oauth
+◉ Google Firebase Authentication (Password): https://firebase.google.com/docs/auth/web/password-auth
+◉ Google Firebase Authentication (Email Link): https://firebase.google.com/docs/auth/web/email-link-auth
+◉ Google Firebase Authentication (TOTP): https://firebase.google.com/docs/auth/web/totp-mfa
+
+
+AWS Amplify
+
+https://www.netacad.com/catalogs/learn/programming
+
+https://grow.google/intl/en_in/learn-skills/?skills=start-a-career&type=free-course&type=free-certification&skills=remote-work&skills=going-digital&skills=career-growth&skills=business-growth
+30th sep
+
+---------------------
+bookmark
+
+https://pll.harvard.edu/course/cs50s-introduction-databases-sql
+https://pll.harvard.edu/course/cs50s-introduction-artificial-intelligence-python
+https://pll.harvard.edu/course/data-science-building-machine-learning-models
+https://pll.harvard.edu/course/introduction-data-science-python/2026-05
+
+
+https://pll.harvard.edu/course/machine-learning-and-ai-python
+https://pll.harvard.edu/course/data-science-r-basics
+
+after dynamic programming
+https://www.freecodecamp.org/learn/python-v9/
+https://www.freecodecamp.org/learn/javascript-v9/
+
+Rajan Chaudhari
+00:22
+https://www.freecodecamp.org/learn/relational-databases-v9/
+
+Management Information System: Admission Module
+
+we have to use 
+https://clerk.com/
+in expense tracker

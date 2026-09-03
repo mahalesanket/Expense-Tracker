@@ -1,0 +1,326 @@
+{% extends "base.html" %}
+{% block title %}Analytics & Insights — Finance Tracker{% endblock %}
+{% block header %}Financial Analytics{% endblock %}
+
+{% block content %}
+<style>
+    .analytics-page {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .metric-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 1.25rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .metric-icon {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        background: #eff6ff;
+        color: #2563eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        flex-shrink: 0;
+    }
+
+    .metric-title {
+        font-size: 0.825rem;
+        color: #6b7280;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .metric-value {
+        font-size: 1.4rem;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .analytics-main-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .chart-container {
+        position: relative;
+        flex: 1;
+        min-height: 250px;
+        max-height: 300px;
+    }
+
+    .insight-item {
+        padding: 0.85rem 1rem;
+        background-color: #f8fafc;
+        border-left: 4px solid #2563eb;
+        border-radius: 8px;
+        margin-bottom: 0.75rem;
+    }
+
+    .insight-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .analytics-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .analytics-table th {
+        padding: 0.85rem 1rem;
+        background: #f8fafc;
+        color: #4b5563;
+        font-size: 0.85rem;
+        font-weight: 700;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .analytics-table td {
+        padding: 0.85rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.925rem;
+    }
+
+    .analytics-table tr:hover td {
+        background-color: #f8fafc;
+    }
+
+    .progress-bar-bg {
+        flex: 1;
+        height: 8px;
+        background: #e2e8f0;
+        border-radius: 10px;
+        overflow: hidden;
+        max-width: 140px;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: #2563eb;
+        border-radius: 10px;
+    }
+
+    @media (max-width: 900px) {
+        .analytics-main-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="analytics-page">
+
+    <!-- Top Key Metrics -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-icon">💳</div>
+            <div>
+                <div class="metric-title">Total Spending</div>
+                <div class="metric-value">₹{{ "%.2f"|format(total_spend) }}</div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon">📅</div>
+            <div>
+                <div class="metric-title">Daily Average</div>
+                <div class="metric-value">₹{{ "%.2f"|format(avg_daily) }}</div>
+            </div>
+        </div>
+        <div class="metric-card">
+            <div class="metric-icon">🏆</div>
+            <div>
+                <div class="metric-title">Top Spending Category</div>
+                <div class="metric-value" style="font-size: 1.15rem;">
+                    {% if cat_breakdown %}
+                        {{ cat_breakdown[0]['expense_category'] }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts & Insights Row -->
+    <div class="analytics-main-grid">
+        <!-- Distribution Chart -->
+        <div class="card" style="display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #1e293b;">Expense Distribution</h3>
+            <div class="chart-container">
+                <canvas id="analyticsCategoryChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Daily Spending Trend -->
+        <div class="card" style="display: flex; flex-direction: column;">
+            <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #1e293b;">Recent Daily Trends</h3>
+            <div class="chart-container">
+                <canvas id="analyticsTrendChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smart Insights Section -->
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #1e293b; display: flex; align-items: center; gap: 0.5rem;">
+            💡 Smart Financial Insights
+        </h3>
+        <div>
+            {% if insights %}
+                {% for insight in insights %}
+                <div class="insight-item">
+                    <p style="margin: 0; font-size: 0.95rem; color: #334155;">{{ insight }}</p>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p style="color: #64748b;">Not enough expense data to generate insights yet. Start adding expenses to see analytical trends.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Detailed Breakdown Table -->
+    <div class="card">
+        <h3 style="margin-bottom: 1rem; font-size: 1.1rem; color: #1e293b;">Category Spend Breakdown</h3>
+        <div class="table-responsive">
+            <table class="analytics-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Total Spent</th>
+                        <th>Share of Spending</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if cat_breakdown and total_spend > 0 %}
+                        {% for cat in cat_breakdown %}
+                            {% set percent = (cat.total / total_spend) * 100 %}
+                            <tr>
+                                <td style="font-weight: 600; color: #1e293b;">{{ cat.expense_category }}</td>
+                                <td style="font-weight: 700; color: #0f172a;">₹{{ "%.2f"|format(cat.total) }}</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                                        <div class="progress-bar-bg">
+                                            <div class="progress-bar-fill" style="width: {{ '%.1f'|format(percent) }}%;"></div>
+                                        </div>
+                                        <span style="font-size: 0.85rem; color: #64748b; font-weight: 600;">{{ "%.1f"|format(percent) }}%</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #64748b; padding: 2rem 0;">
+                                No spending data found to analyze. Add some expenses first!
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Safe Data Injection -->
+<script id="categories-data" type="application/json">
+    {{ cat_breakdown | map(attribute='expense_category') | list | tojson }}
+</script>
+<script id="totals-data" type="application/json">
+    {{ cat_breakdown | map(attribute='total') | list | tojson }}
+</script>
+<script id="trend-dates-data" type="application/json">
+    {{ daily_trends | map(attribute='expense_date') | list | tojson }}
+</script>
+<script id="trend-totals-data" type="application/json">
+    {{ daily_trends | map(attribute='total') | list | tojson }}
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Parse Category Data
+        const categories = JSON.parse(document.getElementById('categories-data')?.textContent || '[]');
+        const categoryTotals = JSON.parse(document.getElementById('totals-data')?.textContent || '[]');
+
+        // Parse Trend Data
+        const trendDates = JSON.parse(document.getElementById('trend-dates-data')?.textContent || '[]');
+        const trendTotals = JSON.parse(document.getElementById('trend-totals-data')?.textContent || '[]');
+
+        const chartColors = ['#2563EB', '#16A34A', '#F59E0B', '#DC2626', '#8B5CF6', '#EC4899', '#14B8A6', '#F97316'];
+
+        // Donut Category Chart
+        const catCtx = document.getElementById('analyticsCategoryChart')?.getContext('2d');
+        if (catCtx) {
+            new Chart(catCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: categories.length ? categories : ['No Data'],
+                    datasets: [{
+                        data: categoryTotals.length ? categoryTotals : [1],
+                        backgroundColor: categories.length ? chartColors : ['#e2e8f0']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // Daily Trend Bar Chart
+        const trendCtx = document.getElementById('analyticsTrendChart')?.getContext('2d');
+        if (trendCtx) {
+            new Chart(trendCtx, {
+                type: 'bar',
+                data: {
+                    labels: trendDates.length ? trendDates : ['No Data'],
+                    datasets: [{
+                        label: 'Daily Spend (₹)',
+                        data: trendTotals.length ? trendTotals : [0],
+                        backgroundColor: '#2563eb',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

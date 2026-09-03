@@ -1,0 +1,473 @@
+{% extends "base.html" %}
+{% block title %}Expenses | Expense Tracker{% endblock %}
+{% block header %}Expense Management{% endblock %}
+
+{% block content %}
+<style>
+    /* Styling Enhancements for Expense Module */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 1.25rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .stat-card .label {
+        font-size: 0.85rem;
+        color: #6b7280;
+        font-weight: 600;
+        margin-bottom: 0.35rem;
+    }
+
+    .stat-card .value {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #111827;
+    }
+
+    .filter-bar {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .filter-bar input,
+    .filter-bar select {
+        padding: 0.6rem 0.9rem;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        background: #ffffff;
+    }
+
+    .table-card {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.03);
+    }
+
+    .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    .custom-table th {
+        background: #f8fafc;
+        padding: 0.9rem 1rem;
+        font-size: 0.825rem;
+        text-transform: uppercase;
+        color: #6b7280;
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .custom-table td {
+        padding: 1rem;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.925rem;
+        vertical-align: middle;
+    }
+
+    .custom-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    /* Category Badges */
+    .badge-category {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.25rem 0.7rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+    .badge-payment {
+        display: inline-block;
+        padding: 0.2rem 0.6rem;
+        border-radius: 6px;
+        font-size: 0.775rem;
+        font-weight: 600;
+        background: #e0f2fe;
+        color: #0369a1;
+    }
+
+    /* Action Icon Buttons */
+    .btn-action-edit {
+        background: #fef3c7;
+        color: #d97706;
+        border: none;
+        padding: 0.45rem 0.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-action-edit:hover {
+        background: #fde68a;
+    }
+
+    .btn-action-delete {
+        background: #fee2e2;
+        color: #dc2626;
+        border: none;
+        padding: 0.45rem 0.75rem;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-action-delete:hover {
+        background: #fca5a5;
+    }
+
+    /* Pagination controls */
+    .pagination {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.25rem;
+        background: #ffffff;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .pagination-btn {
+        padding: 0.4rem 0.8rem;
+        border: 1px solid #d1d5db;
+        background: #ffffff;
+        border-radius: 6px;
+        text-decoration: none;
+        color: #374151;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .pagination-btn.disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+</style>
+
+<!-- Header & Add Button -->
+<div class="page-header">
+    <div>
+        <h2 style="font-size: 1.5rem; font-weight: 800; color: #111827; margin: 0;">Expense Tracker</h2>
+        <p style="color: #6b7280; font-size: 0.875rem; margin-top: 0.25rem;">Monitor and manage your daily expenditure</p>
+    </div>
+    <button class="btn btn-primary" onclick="openModal('addExpenseModal')" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.25rem; border-radius: 10px; font-weight: 700;">
+        <span>+</span> Add New Expense
+    </button>
+</div>
+
+<!-- Summary Metrics Row -->
+<div class="stats-row">
+    {% set total_amount = expenses | sum(attribute='expense_amount') %}
+    <div class="stat-card">
+        <div class="label">Filtered Total</div>
+        <div class="value" style="color: #dc2626;">₹{{ "%.2f"|format(total_amount) }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Total Expenses Listed</div>
+        <div class="value">{{ expenses|length }} Records</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Average per Transaction</div>
+        <div class="value">
+            {% if expenses|length > 0 %}
+                ₹{{ "%.2f"|format(total_amount / (expenses|length)) }}
+            {% else %}
+                ₹0.00
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Filter and Search Bar -->
+<div class="card" style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 12px; background: #ffffff; border: 1px solid #e5e7eb;">
+    <form method="GET" class="filter-bar">
+        <input type="text" name="search" placeholder="Search by name or note..." value="{{ search_query }}" style="flex: 1; min-width: 200px;">
+        
+        <select name="category" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            <option value="Food" {% if category_filter == 'Food' %}selected{% endif %}>🍔 Food</option>
+            <option value="Shopping" {% if category_filter == 'Shopping' %}selected{% endif %}>🛒 Shopping</option>
+            <option value="Transport" {% if category_filter == 'Transport' %}selected{% endif %}>🚕 Transport</option>
+            <option value="Bills" {% if category_filter == 'Bills' %}selected{% endif %}>🧾 Bills</option>
+            <option value="Rent" {% if category_filter == 'Rent' %}selected{% endif %}>🏠 Rent</option>
+            <option value="Utilities" {% if category_filter == 'Utilities' %}selected{% endif %}>⚡ Utilities</option>
+            <option value="Entertainment" {% if category_filter == 'Entertainment' %}selected{% endif %}>🎬 Entertainment</option>
+            <option value="Health" {% if category_filter == 'Health' %}selected{% endif %}>💊 Health</option>
+            <option value="Other" {% if category_filter == 'Other' %}selected{% endif %}>📦 Other</option>
+        </select>
+        
+        <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.2rem; border-radius: 8px;">Filter</button>
+        {% if search_query or category_filter %}
+            <a href="{{ url_for('expenses.list_expenses') }}" class="btn" style="text-decoration: none; padding: 0.6rem 1rem; background: #f3f4f6; color: #374151; border-radius: 8px;">Reset</a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Main Expenses Data Table -->
+<div class="table-card">
+    <table class="custom-table">
+        <thead>
+            <tr>
+                <th>Expense Details</th>
+                <th>Category</th>
+                <th>Date</th>
+                <th>Payment Method</th>
+                <th>Amount</th>
+                <th style="text-align: right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for expense in expenses %}
+            <tr>
+                <td>
+                    <div style="font-weight: 700; color: #1f2937;">{{ expense.expense_name }}</div>
+                    {% if expense.description %}
+                        <div style="font-size: 0.775rem; color: #6b7280; margin-top: 2px;">{{ expense.description }}</div>
+                    {% endif %}
+                </td>
+                <td>
+                    <span class="badge-category">
+                        {% if expense.expense_category == 'Food' %}🍔
+                        {% elif expense.expense_category == 'Shopping' %}🛒
+                        {% elif expense.expense_category == 'Transport' %}🚕
+                        {% elif expense.expense_category == 'Bills' %}🧾
+                        {% elif expense.expense_category == 'Rent' %}🏠
+                        {% elif expense.expense_category == 'Utilities' %}⚡
+                        {% elif expense.expense_category == 'Entertainment' %}🎬
+                        {% elif expense.expense_category == 'Health' %}💊
+                        {% else %}📦{% endif %}
+                        {{ expense.expense_category }}
+                    </span>
+                </td>
+                <td style="color: #4b5563; font-weight: 500;">{{ expense.expense_date }}</td>
+                <td>
+                    <span class="badge-payment">💳 {{ expense.payment_method or 'Cash' }}</span>
+                </td>
+                <td style="color: #dc2626; font-weight: 800; font-size: 1rem;">- ₹{{ "%.2f"|format(expense.expense_amount) }}</td>
+                <td>
+                    <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                        <!-- Edit Button -->
+                        <button type="button" class="btn-action-edit" 
+                            onclick="openEditModal('{{ expense.expense_id or expense.id }}', '{{ expense.expense_name|escape }}', '{{ expense.expense_amount }}', '{{ expense.expense_category }}', '{{ expense.expense_date }}', '{{ expense.payment_method }}', '{{ (expense.description or '')|escape }}')">
+                            Edit
+                        </button>
+                        
+                        <!-- Delete Button (Triggers Modal) -->
+                        <button type="button" class="btn-action-delete" 
+                            onclick="confirmDelete('{{ url_for('expenses.delete_expense', expense_id=expense.expense_id or expense.id) }}', '{{ expense.expense_name|escape }}')">
+                            Delete
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" style="padding: 3rem; text-align: center; color: #9ca3af;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💸</div>
+                    <div style="font-weight: 600;">No expense records found</div>
+                    <div style="font-size: 0.85rem; margin-top: 0.25rem;">Try adjusting your search criteria or add a new record.</div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Pagination Footer -->
+    {% if total_pages and total_pages > 1 %}
+    <div class="pagination">
+        <span style="font-size: 0.85rem; color: #6b7280;">Page {{ page }} of {{ total_pages }}</span>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{{ url_for('expenses.list_expenses', page=page-1, search=search_query, category=category_filter) }}" class="pagination-btn {% if page <= 1 %}disabled{% endif %}">Previous</a>
+            <a href="{{ url_for('expenses.list_expenses', page=page+1, search=search_query, category=category_filter) }}" class="pagination-btn {% if page >= total_pages %}disabled{% endif %}">Next</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Add Expense Modal -->
+<div id="addExpenseModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 1rem; color: #111827;">Record New Expense</h3>
+        <form method="POST" action="{{ url_for('expenses.add_expense') }}">
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Expense Name</label>
+                <input type="text" name="expense_name" required placeholder="e.g., Grocery Shopping" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Amount (₹)</label>
+                <input type="number" step="0.01" name="expense_amount" required placeholder="0.00" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Category</label>
+                <select name="expense_category" required style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+                    <option value="Food">🍔 Food</option>
+                    <option value="Shopping">🛒 Shopping</option>
+                    <option value="Transport">🚕 Transport</option>
+                    <option value="Bills">🧾 Bills</option>
+                    <option value="Rent">🏠 Rent</option>
+                    <option value="Utilities">⚡ Utilities</option>
+                    <option value="Entertainment">🎬 Entertainment</option>
+                    <option value="Health">💊 Health</option>
+                    <option value="Other">📦 Other</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Date</label>
+                <input type="date" name="expense_date" required style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Payment Method</label>
+                <select name="payment_method" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+                    <option value="UPI">UPI</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Description (Optional)</label>
+                <input type="text" name="description" placeholder="Short description or notes" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+            </div>
+            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.25rem;">
+                <button type="button" class="btn" onclick="closeModal('addExpenseModal')" style="background: #f3f4f6; color: #374151;">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Expense</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Expense Modal -->
+<div id="editExpenseModal" class="modal">
+    <div class="modal-content">
+        <h3 style="margin-bottom: 1rem; color: #111827;">Edit Expense</h3>
+        <form id="editExpenseForm" method="POST">
+            <input type="hidden" id="edit_expense_id" name="expense_id">
+            
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Expense Name</label>
+                <input type="text" id="edit_expense_name" name="expense_name" required style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Amount (₹)</label>
+                <input type="number" step="0.01" id="edit_expense_amount" name="expense_amount" required style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Category</label>
+                <select id="edit_expense_category" name="expense_category" required style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+                    <option value="Food">🍔 Food</option>
+                    <option value="Shopping">🛒 Shopping</option>
+                    <option value="Transport">🚕 Transport</option>
+                    <option value="Bills">🧾 Bills</option>
+                    <option value="Rent">🏠 Rent</option>
+                    <option value="Utilities">⚡ Utilities</option>
+                    <option value="Entertainment">🎬 Entertainment</option>
+                    <option value="Health">💊 Health</option>
+                    <option value="Other">📦 Other</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Date</label>
+                <input type="date" id="edit_expense_date" name="expense_date" required style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Payment Method</label>
+                <select id="edit_payment_method" name="payment_method" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+                    <option value="UPI">UPI</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <label style="font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem;">Description (Optional)</label>
+                <input type="text" id="edit_description" name="description" style="width: 100%; padding: 0.6rem; border-radius: 8px; border: 1px solid #d1d5db;">
+            </div>
+            <div style="display: flex; gap: 0.5rem; justify-content: flex-end; margin-top: 1.25rem;">
+                <button type="button" class="btn" onclick="closeModal('editExpenseModal')" style="background: #f3f4f6; color: #374151;">Cancel</button>
+                <button type="submit" class="btn btn-primary">Update Expense</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Custom Delete Confirmation Modal -->
+<div id="deleteConfirmModal" class="modal">
+    <div class="modal-content" style="max-width: 400px; text-align: center; padding: 1.5rem;">
+        <h3 style="color: #dc2626; margin-bottom: 0.5rem;">Delete Expense</h3>
+        <p id="deleteConfirmMessage" style="margin-bottom: 1.5rem; color: #6b7280; font-size: 0.9rem;">
+            Are you sure you want to delete this expense?
+        </p>
+        <form id="deleteExpenseForm" method="POST">
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                <button type="button" class="btn" onclick="closeModal('deleteConfirmModal')" style="background: #f3f4f6; color: #374151;">No, Cancel</button>
+                <button type="submit" class="btn btn-danger-solid" style="background: #dc2626; color: white;">Yes, Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function openModal(id) {
+        document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('active');
+    }
+
+    function openEditModal(id, name, amount, category, date, paymentMethod, description) {
+        const editForm = document.getElementById('editExpenseForm');
+        editForm.action = `/edit-expense/${id}`;
+
+        document.getElementById('edit_expense_id').value = id;
+        document.getElementById('edit_expense_name').value = name;
+        document.getElementById('edit_expense_amount').value = amount;
+        document.getElementById('edit_expense_category').value = category;
+        document.getElementById('edit_expense_date').value = date;
+        document.getElementById('edit_payment_method').value = paymentMethod;
+        document.getElementById('edit_description').value = description;
+
+        openModal('editExpenseModal');
+    }
+
+    function confirmDelete(actionUrl, expenseName) {
+        document.getElementById('deleteExpenseForm').action = actionUrl;
+        document.getElementById('deleteConfirmMessage').innerText = `Are you sure you want to delete "${expenseName}"?`;
+        openModal('deleteConfirmModal');
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Edit Expense</title>
+
+</head>
+
+<body>
+
+    <h2>Edit Expense</h2>
+
+    <form action="/update_expense" method="POST">
+
+        <input
+            type="hidden"
+            name="expense_id"
+            value="{{ expense['expense_id'] }}"
+        >
+
+        <label>Expense Name</label>
+        <input
+            type="text"
+            name="Expense Name"
+            value="{{ expense['expense_name'] }}"
+            required
+        >
+
+        <br><br>
+
+        <label>Expense Amount</label>
+        <input
+            type="number"
+            name="Expense Amount"
+            value="{{ expense['expense_amount'] }}"
+            step="0.01"
+            required
+        >
+
+        <br><br>
+
+        <label>Category</label>
+
+        <select name="Expense Category">
+
+            {% for category in categories %}
+
+            <option
+                value="{{ category }}"
+                {% if expense['expense_category'] == category %}
+                    selected
+                {% endif %}
+            >
+                {{ category }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <br><br>
+
+        <label>Expense Date</label>
+
+        <input
+            type="date"
+            name="Expense Date"
+            value="{{ expense['expense_date'] }}"
+        >
+
+        <br><br>
+
+        <button type="submit">
+            Update Expense
+        </button>
+
+        <a href="/">
+            Cancel
+        </a>
+
+    </form>
+
+</body>
+</html>
